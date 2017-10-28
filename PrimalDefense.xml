@@ -1,0 +1,1039 @@
+<Ui xmlns="http://www.blizzard.com/wow/ui/"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.blizzard.com/wow/ui/">
+	<Script file="localization.xml.lua"/>
+	<Button name="PrimalDefense_MapTileTemplate" frameStrata="FULLSCREEN" virtual="true">
+		<Size>
+			<AbsDimension x="30" y="30"/>
+		</Size>
+		<Scripts>
+			<OnEnter>
+				PrimalDefense_MapTileOnEnter(self)
+			</OnEnter>
+			<OnLeave>
+				PrimalDefense_MapTileOnLeave(self)
+			</OnLeave>
+			<OnClick>
+				PrimalDefense_MapTileOnClick(self)
+			</OnClick>
+		</Scripts>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture name="$parentTower" file="Interface\Icons\Ability_Vehicle_SiegeEngineCannon" setAllPoints="true" hidden="true"/>
+			</Layer>
+		</Layers>
+	</Button>
+	<Frame name="PrimalDefense" parent="UIParent" movable="true" enableMouse="true" hidden="true" frameStrata="DIALOG">
+		<Size>
+			<AbsDimension x="600" y="584"/>
+		</Size>
+		<Anchors>
+			<Anchor point="CENTER"/>
+		</Anchors>
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgefile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+			<BackgroundInsets>
+				<AbsInset left="10" right="10" top="10" bottom="10"/>
+			</BackgroundInsets>
+			<TileSize>
+				<AbsValue val="32"/>
+			</TileSize>
+			<EdgeSize>
+				<AbsValue val="32"/>
+			</EdgeSize>
+		</Backdrop>
+		<Scripts>
+			<OnLoad>
+				PrimalDefense_OnLoad(self)
+			</OnLoad>
+			<OnShow>
+				PrimalDefense_OnShow(self)
+			</OnShow>
+			<OnUpdate>
+				PrimalDefense_OnUpdate(self, elapsed)
+			</OnUpdate>
+			<OnDragStart>
+				self:StartMoving()
+			</OnDragStart>
+			<OnDragStop>
+				self:StopMovingOrSizing()
+			</OnDragStop>
+			<OnKeyDown>
+				PrimalDefense_OnKeyDown(self, key)
+			</OnKeyDown>
+		</Scripts>
+		<Frames>
+			<Button name="$parent_Close" inherits="UIPanelCloseButton">
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativePoint="TOPRIGHT">
+						<Offset>
+							<AbsDimension x="-10" y="-10"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+			</Button>
+			<Frame name="$parent_Map" enableMouse="true">
+				<Size>
+					<AbsDimension x="390" y="486"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativePoint="TOPLEFT">
+						<Offset>
+							<AbsDimension x="20" y="-30"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border">
+					<EdgeSize>
+						<AbsValue val="16"/>
+					</EdgeSize>
+				</Backdrop>
+				<Frames>
+					<Frame name="$parentRange" hidden="true">
+						<Size>
+							<AbsDimension x="100" y="100"/>
+						</Size>
+						<Layers>
+							<Layer level="BACKGROUND">
+								<Texture name="$parentTexture" file="Interface\SpellShadow\Spell-Shadow-Acceptable" setAllPoints="true"/>
+							</Layer>
+						</Layers>
+					</Frame>
+				</Frames>
+				<Layers>
+					<Layer level="BACKGROUND">
+						<Texture name="$parentTexture" file="Interface\AddOns\PrimalDefense\backgroundMap">
+							<Size>
+								<AbsDimension x="384" y="480"/>
+							</Size>
+							<Anchors>
+								<Anchor point="CENTER"/>
+							</Anchors>
+							<TexCoords left="0" right="0.75" top="0" bottom="0.9375"/>
+						</Texture>
+					</Layer>
+				</Layers>
+			</Frame>
+			<Frame name="$parent_BuildTowers" enableMouse="true">
+				<Size>
+					<AbsDimension x="172" y="176"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_Map" relativePoint="TOPRIGHT">
+						<Offset>
+							<AbsDimension x="0" y="-150"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border">
+					<EdgeSize>
+						<AbsValue val="16"/>
+					</EdgeSize>
+				</Backdrop>
+				<Frames>
+					<Button name="$parentCannon">
+						<Size>
+							<AbsDimension x="30" y="30"/>
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativePoint="TOPLEFT">
+								<Offset>
+									<AbsDimension x="10" y="-10"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<NormalTexture file="Interface\Icons\Ability_Vehicle_SiegeEngineCannon" setAllPoints="true"/>
+						<Scripts>
+							<OnEnter>
+								PrimalDefense_BuildTowersOnEnter(self, "CANNON")
+							</OnEnter>
+							<OnLeave>
+								PrimalDefense_HideTooltip()
+							</OnLeave>
+							<OnClick>
+								PrimalDefense_BuildTowersOnClick(self)
+							</OnClick>
+						</Scripts>
+						<Layers>
+							<Layer level="ARTWORK">
+								<FontString name="$parentText" text="PD_CANNON" inherits="GameFontNormalSmall">
+									<Anchors>
+										<Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
+											<Offset>
+												<AbsDimension x="2" y="-2"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="$parentCost" text="PD_20GOLD" inherits="GameFontNormalSmall">
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="$parentText" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="2" y="0"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
+					</Button>
+					<Button name="$parentArrow">
+						<Size>
+							<AbsDimension x="30" y="30"/>
+						</Size>
+						<Anchors>
+							<Anchor point="TOP" relativeTo="$parentCannon" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="0" y="-2"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<NormalTexture file="Interface\Icons\INV_Misc_Ammo_Arrow_01" setAllPoints="true"/>
+						<Scripts>
+							<OnEnter>
+								PrimalDefense_BuildTowersOnEnter(self, "ARROW")
+							</OnEnter>
+							<OnLeave>
+								PrimalDefense_HideTooltip()
+							</OnLeave>
+							<OnClick>
+								PrimalDefense_BuildTowersOnClick(self)
+							</OnClick>
+						</Scripts>
+						<Layers>
+							<Layer level="ARTWORK">
+								<FontString name="$parentText" text="PD_ARROW" inherits="GameFontNormalSmall">
+									<Anchors>
+										<Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
+											<Offset>
+												<AbsDimension x="2" y="-2"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="$parentCost" text="PD_15GOLD" inherits="GameFontNormalSmall">
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="$parentText" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="2" y="0"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
+					</Button>
+					<Button name="$parentFire">
+						<Size>
+							<AbsDimension x="30" y="30"/>
+						</Size>
+						<Anchors>
+							<Anchor point="TOP" relativeTo="$parentArrow" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="0" y="-2"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<NormalTexture file="Interface\Icons\Spell_Fire_SearingTotem" setAllPoints="true"/>
+						<Scripts>
+							<OnLoad>
+								self:SetAlpha(0.5)
+							</OnLoad>
+							<OnEnter>
+								PrimalDefense_BuildTowersOnEnter(self, "FIRE")
+							</OnEnter>
+							<OnLeave>
+								PrimalDefense_HideTooltip()
+							</OnLeave>
+							<OnClick>
+								PrimalDefense_BuildTowersOnClick(self)
+							</OnClick>
+						</Scripts>
+						<Layers>
+							<Layer level="ARTWORK">
+								<FontString name="$parentText" text="PD_FIRE" inherits="GameFontNormalSmall">
+									<Anchors>
+										<Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
+											<Offset>
+												<AbsDimension x="2" y="-2"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="$parentCost" text="PD_REQUIREBLESSING" inherits="GameFontNormalSmall">
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="$parentText" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="2" y="0"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
+					</Button>
+					<Button name="$parentIce">
+						<Size>
+							<AbsDimension x="30" y="30"/>
+						</Size>
+						<Anchors>
+							<Anchor point="TOP" relativeTo="$parentFire" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="0" y="-2"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<NormalTexture file="Interface\Icons\Spell_Fire_BluePyroblast" setAllPoints="true"/>
+						<Scripts>
+							<OnLoad>
+								self:SetAlpha(0.5)
+							</OnLoad>
+							<OnEnter>
+								PrimalDefense_BuildTowersOnEnter(self, "ICE")
+							</OnEnter>
+							<OnLeave>
+								PrimalDefense_HideTooltip()
+							</OnLeave>
+							<OnClick>
+								PrimalDefense_BuildTowersOnClick(self)
+							</OnClick>
+						</Scripts>
+						<Layers>
+							<Layer level="ARTWORK">
+								<FontString name="$parentText" text="PD_ICE" inherits="GameFontNormalSmall">
+									<Anchors>
+										<Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
+											<Offset>
+												<AbsDimension x="2" y="-2"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="$parentCost" text="PD_REQUIREBLESSING" inherits="GameFontNormalSmall">
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="$parentText" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="2" y="0"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
+					</Button>
+					<Button name="$parentShadow">
+						<Size>
+							<AbsDimension x="30" y="30"/>
+						</Size>
+						<Anchors>
+							<Anchor point="TOP" relativeTo="$parentIce" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="0" y="-2"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<NormalTexture file="Interface\Icons\Spell_Shadow_PainSpike" setAllPoints="true"/>
+						<Scripts>
+							<OnLoad>
+								self:SetAlpha(0.5)
+							</OnLoad>
+							<OnEnter>
+								PrimalDefense_BuildTowersOnEnter(self, "SHADOW")
+							</OnEnter>
+							<OnLeave>
+								PrimalDefense_HideTooltip()
+							</OnLeave>
+							<OnClick>
+								PrimalDefense_BuildTowersOnClick(self)
+							</OnClick>
+						</Scripts>
+						<Layers>
+							<Layer level="ARTWORK">
+								<FontString name="$parentText" text="PD_SHADOW" inherits="GameFontNormalSmall">
+									<Anchors>
+										<Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
+											<Offset>
+												<AbsDimension x="2" y="-2"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="$parentCost" text="PD_REQUIREBLESSING" inherits="GameFontNormalSmall">
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="$parentText" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="2" y="0"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
+					</Button>
+				</Frames>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="$parentText" text="PD_BUILDTOWERS" inherits="GameFontNormalLarge">
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT">
+									<Offset>
+										<AbsDimension x="5" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+			</Frame>
+			<Frame name="$parent_Blessings" enableMouse="true">
+				<Size>
+					<AbsDimension x="172" y="114"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOP" relativeTo="$parent_BuildTowers" relativePoint="BOTTOM">
+						<Offset>
+							<AbsDimension x="0" y="-24"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border">
+					<EdgeSize>
+						<AbsValue val="16"/>
+					</EdgeSize>
+				</Backdrop>
+				<Frames>
+					<Button name="$parentFire">
+						<Size>
+							<AbsDimension x="30" y="30"/>
+						</Size>
+						<Anchors>
+							<Anchor point="TOPLEFT" relativePoint="TOPLEFT">
+								<Offset>
+									<AbsDimension x="10" y="-10"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<NormalTexture file="Interface\Icons\Spell_Fire_Rune" setAllPoints="true"/>
+						<Scripts>
+							<OnLoad>
+								self:SetAlpha(0.5)
+							</OnLoad>
+							<OnEnter>
+								PrimalDefense_BlessingsOnEnter(self, "FIRE")
+							</OnEnter>
+							<OnLeave>
+								PrimalDefense_HideTooltip()
+							</OnLeave>
+							<OnClick>
+								PrimalDefense_BlessingsOnClick(self)
+							</OnClick>
+						</Scripts>
+						<Layers>
+							<Layer level="ARTWORK">
+								<FontString name="$parentText" text="PD_FURYOFSKOLL1" inherits="GameFontNormalSmall">
+									<Anchors>
+										<Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
+											<Offset>
+												<AbsDimension x="2" y="-2"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="$parentCost" text="PD_30ESSENCE" inherits="GameFontNormalSmall">
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="$parentText" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="2" y="0"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
+					</Button>
+					<Button name="$parentIce">
+						<Size>
+							<AbsDimension x="30" y="30"/>
+						</Size>
+						<Anchors>
+							<Anchor point="TOP" relativeTo="$parentFire" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="0" y="-2"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<NormalTexture file="Interface\Icons\Spell_Ice_Rune" setAllPoints="true"/>
+						<Scripts>
+							<OnLoad>
+								self:SetAlpha(0.5)
+							</OnLoad>
+							<OnEnter>
+								PrimalDefense_BlessingsOnEnter(self, "ICE")
+							</OnEnter>
+							<OnLeave>
+								PrimalDefense_HideTooltip()
+							</OnLeave>
+							<OnClick>
+								PrimalDefense_BlessingsOnClick(self)
+							</OnClick>
+						</Scripts>
+						<Layers>
+							<Layer level="ARTWORK">
+								<FontString name="$parentText" text="PD_SONGOFLORELEI1" inherits="GameFontNormalSmall">
+									<Anchors>
+										<Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
+											<Offset>
+												<AbsDimension x="2" y="-2"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="$parentCost" text="PD_30ESSENCE" inherits="GameFontNormalSmall">
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="$parentText" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="2" y="0"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
+					</Button>
+					<Button name="$parentShadow">
+						<Size>
+							<AbsDimension x="30" y="30"/>
+						</Size>
+						<Anchors>
+							<Anchor point="TOP" relativeTo="$parentIce" relativePoint="BOTTOM">
+								<Offset>
+									<AbsDimension x="0" y="-2"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<NormalTexture file="Interface\Icons\Spell_Shadow_Rune" setAllPoints="true"/>
+						<Scripts>
+							<OnLoad>
+								self:SetAlpha(0.5)
+							</OnLoad>
+							<OnEnter>
+								PrimalDefense_BlessingsOnEnter(self, "SHADOW")
+							</OnEnter>
+							<OnLeave>
+								PrimalDefense_HideTooltip()
+							</OnLeave>
+							<OnClick>
+								PrimalDefense_BlessingsOnClick(self)
+							</OnClick>
+						</Scripts>
+						<Layers>
+							<Layer level="ARTWORK">
+								<FontString name="$parentText" text="PD_BLIGHTOFABYSS1" inherits="GameFontNormalSmall">
+									<Anchors>
+										<Anchor point="TOPLEFT" relativePoint="TOPRIGHT">
+											<Offset>
+												<AbsDimension x="2" y="-2"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+								<FontString name="$parentCost" text="PD_30ESSENCE" inherits="GameFontNormalSmall">
+									<Anchors>
+										<Anchor point="TOPLEFT" relativeTo="$parentText" relativePoint="BOTTOMLEFT">
+											<Offset>
+												<AbsDimension x="2" y="0"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
+					</Button>
+				</Frames>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="$parentText" text="PD_BLESSING" inherits="GameFontNormalLarge">
+							<Anchors>
+								<Anchor point="BOTTOMLEFT" relativePoint="TOPLEFT">
+									<Offset>
+										<AbsDimension x="5" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+			</Frame>
+			<Frame name="$parent_Message">
+				<Size>
+					<AbsDimension x="390" y="24"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_Map" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
+				<Backdrop edgeFile="Interface\Tooltips\UI-Tooltip-Border">
+					<EdgeSize>
+						<AbsValue val="16"/>
+					</EdgeSize>
+				</Backdrop>
+				<Layers>
+					<Layer level="BACKGROUND">
+						<FontString name="$parentText" text="PD_WELCOMETOPD" inherits="GameFontNormalSmall">
+							<Anchors>
+								<Anchor point="LEFT" relativePoint="LEFT">
+									<Offset>
+										<AbsDimension x="8" y="0"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+			</Frame>
+			<Button name="$parent_Reset" text="PD_RESETGAME" inherits="UIPanelButtonTemplate">
+				<Size>
+					<AbsDimension x="100" y="30"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="$parent_Message" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						if ( GameState.levelInProgress ) then
+							GameState.paused = true
+						end
+						PrimalDefense_ResetDialog:Show()
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parent_Start" text="PD_STARTLEVEL" inherits="UIPanelButtonTemplate">
+				<Size>
+					<AbsDimension x="100" y="30"/>
+				</Size>
+				<Anchors>
+					<Anchor point="TOPRIGHT" relativeTo="$parent_Message" relativePoint="BOTTOMRIGHT"/>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+						PrimalDefense_StartLevel()
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Button name="$parent_Help" text="PD_HELP" inherits="UIPanelButtonTemplate" enabled="false">
+				<Size>
+					<AbsDimension x="75" y="30"/>
+				</Size>
+				<Anchors>
+					<Anchor point="RIGHT" relativeTo="$parent_BuildTowers" relativePoint="RIGHT"/>
+					<Anchor point="BOTTOM" relativeTo="$parent_Start" relativePoint="BOTTOM"/>
+				</Anchors>
+				<Scripts>
+					<OnClick>
+					</OnClick>
+				</Scripts>
+			</Button>
+			<Frame name="$parent_ResetDialog" enableMouse="true" frameStrata="FULLSCREEN_DIALOG" hidden="true">
+				<Size>
+					<AbsDimension x="275" y="80"/>
+				</Size>
+				<Anchors>
+					<Anchor point="CENTER"/>
+				</Anchors>
+				<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgefile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+					<BackgroundInsets>
+						<AbsInset left="10" right="10" top="10" bottom="10"/>
+					</BackgroundInsets>
+					<TileSize>
+						<AbsValue val="32"/>
+					</TileSize>
+					<EdgeSize>
+						<AbsValue val="32"/>
+					</EdgeSize>
+				</Backdrop>
+				<Frames>
+					<Button name="$parentYes" text="PD_YES" inherits="UIPanelButtonTemplate">
+						<Size>
+							<AbsDimension x="75" y="30"/>
+						</Size>
+						<Anchors>
+							<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT">
+								<Offset>
+									<AbsDimension x="35" y="15"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								PrimalDefense_ResetGameState()
+								PrimalDefense_ResetDialog:Hide()
+							</OnClick>
+						</Scripts>
+					</Button>
+					<Button name="$parentNo" text="PD_NO" inherits="UIPanelButtonTemplate">
+						<Size>
+							<AbsDimension x="75" y="30"/>
+						</Size>
+						<Anchors>
+							<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT">
+								<Offset>
+									<AbsDimension x="-35" y="15"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								GameState.paused = false
+								PrimalDefense_ResetDialog:Hide()
+							</OnClick>
+						</Scripts>
+					</Button>
+				</Frames>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="$parentText" text="PD_SURETORESET" inherits="GameFontNormalSmall">
+							<Anchors>
+								<Anchor point="TOP" relativePoint="TOP">
+									<Offset>
+										<AbsDimension x="0" y="-20"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+			</Frame>
+			<Frame name="$parent_GameOverDialog" enableMouse="true" frameStrata="FULLSCREEN_DIALOG" hidden="true">
+				<Size>
+					<AbsDimension x="275" y="80"/>
+				</Size>
+				<Anchors>
+					<Anchor point="CENTER"/>
+				</Anchors>
+				<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgefile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+					<BackgroundInsets>
+						<AbsInset left="10" right="10" top="10" bottom="10"/>
+					</BackgroundInsets>
+					<TileSize>
+						<AbsValue val="32"/>
+					</TileSize>
+					<EdgeSize>
+						<AbsValue val="32"/>
+					</EdgeSize>
+				</Backdrop>
+				<Frames>
+					<Button name="$parentRestart" text="PD_RESTARTGAME" inherits="UIPanelButtonTemplate">
+						<Size>
+							<AbsDimension x="100" y="30"/>
+						</Size>
+						<Anchors>
+							<Anchor point="CENTER" relativePoint="CENTER">
+								<Offset>
+									<AbsDimension x="0" y="-10"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<Scripts>
+							<OnClick>
+								PrimalDefense_ResetGameState()
+								PrimalDefense_GameOverDialog:Hide()
+							</OnClick>
+						</Scripts>
+					</Button>
+				</Frames>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="$parentText" text="PD_AMIRANCITYDESTROYED" inherits="GameFontNormalSmall">
+							<Anchors>
+								<Anchor point="TOP" relativePoint="TOP">
+									<Offset>
+										<AbsDimension x="0" y="-20"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+			</Frame>
+			<Frame name="$parent_Sidebar" enableMouse="true" frameStrata="HIGH" hidden="true">
+				<Size>
+					<AbsDimension x="200" y="200"/>
+				</Size>
+				<Anchors>
+					<Anchor point="RIGHT" relativePoint="LEFT">
+						<Offset>
+							<AbsDimension x="14" y="0"/>
+						</Offset>
+					</Anchor>
+				</Anchors>
+				<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgefile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+					<BackgroundInsets>
+						<AbsInset left="10" right="10" top="10" bottom="10"/>
+					</BackgroundInsets>
+					<TileSize>
+						<AbsValue val="32"/>
+					</TileSize>
+					<EdgeSize>
+						<AbsValue val="32"/>
+					</EdgeSize>
+				</Backdrop>
+				<Frames>
+					<Button name="$parentSell">
+						<Size>
+							<AbsDimension x="30" y="30"/>
+						</Size>
+						<Anchors>
+							<Anchor point="BOTTOMLEFT" relativePoint="BOTTOMLEFT">
+								<Offset>
+									<AbsDimension x="32" y="16"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<NormalTexture file="Interface\Icons\INV_Enchant_Disenchant" setAllPoints="true"/>
+						<Scripts>
+							<OnEnter>
+								PrimalDefense_SidebarOnEnter(self, "SELL")
+							</OnEnter>
+							<OnLeave>
+								PrimalDefense_HideTooltip()
+							</OnLeave>
+							<OnClick>
+								PrimalDefense_SellSelectedTower()
+							</OnClick>
+						</Scripts>
+						<Layers>
+							<Layer level="ARTWORK">
+								<FontString text="PD_SELLTOWER" inherits="GameFontNormal">
+									<Anchors>
+										<Anchor point="LEFT" relativePoint="RIGHT">
+											<Offset>
+												<AbsDimension x="2" y="0"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
+					</Button>
+					<Button name="$parentUpgrade" hidden="true">
+						<Size>
+							<AbsDimension x="30" y="30"/>
+						</Size>
+						<Anchors>
+							<Anchor point="BOTTOM" relativeTo="$parentSell" relativePoint="TOP">
+								<Offset>
+									<AbsDimension x="0" y="2"/>
+								</Offset>
+							</Anchor>
+						</Anchors>
+						<NormalTexture name="$parentTexture" setAllPoints="true"/>
+						<Scripts>
+							<OnEnter>
+								PrimalDefense_SidebarOnEnter(self, "UPGRADE")
+							</OnEnter>
+							<OnLeave>
+								PrimalDefense_HideTooltip()
+							</OnLeave>
+							<OnClick>
+								PrimalDefense_UpgradeSelectedTower()
+							</OnClick>
+						</Scripts>
+						<Layers>
+							<Layer level="ARTWORK">
+								<FontString name="$parentText" text="PD_UPGRADETOWER" inherits="GameFontNormal">
+									<Anchors>
+										<Anchor point="LEFT" relativePoint="RIGHT">
+											<Offset>
+												<AbsDimension x="2" y="0"/>
+											</Offset>
+										</Anchor>
+									</Anchors>
+								</FontString>
+							</Layer>
+						</Layers>
+					</Button>
+				</Frames>
+				<Layers>
+					<Layer level="ARTWORK">
+						<FontString name="$parentTower" text="PD_TOWERNAME" inherits="GameFontNormalLarge">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativePoint="TOPLEFT">
+									<Offset>
+										<AbsDimension x="16" y="-16"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<FontString name="$parentLevel" text="PD_LEVEL" inherits="GameFontNormal">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativeTo="$parentTower" relativePoint="BOTTOMLEFT">
+									<Offset>
+										<AbsDimension x="4" y="-4"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<FontString name="$parentRange" text="PD_RANGE" inherits="GameFontNormal">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativeTo="$parentLevel" relativePoint="BOTTOMLEFT">
+									<Offset>
+										<AbsDimension x="0" y="-4"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<FontString name="$parentDamage" text="PD_DAMAGE" inherits="GameFontNormal">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativeTo="$parentRange" relativePoint="BOTTOMLEFT">
+									<Offset>
+										<AbsDimension x="0" y="-4"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<FontString name="$parentSpeed" text="PD_SPEED" inherits="GameFontNormal">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativeTo="$parentDamage" relativePoint="BOTTOMLEFT">
+									<Offset>
+										<AbsDimension x="0" y="-4"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+						<FontString name="$parentAbility" text="PD_ABILITY" inherits="GameFontNormal">
+							<Anchors>
+								<Anchor point="TOPLEFT" relativeTo="$parentSpeed" relativePoint="BOTTOMLEFT">
+									<Offset>
+										<AbsDimension x="0" y="-4"/>
+									</Offset>
+								</Anchor>
+							</Anchors>
+						</FontString>
+					</Layer>
+				</Layers>
+			</Frame>
+		</Frames>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture name="$parent_Header" file="Interface\DialogFrame\UI-DialogBox-Header">
+					<Size>
+						<AbsDimension x="250" y="60"/>
+					</Size>
+					<Anchors>
+						<Anchor point="CENTER" relativePoint="TOP">
+							<Offset>
+								<AbsDimension x="0" y="-15"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<FontString name="$parent_HeaderText" text="PD_PRIMALDEFENSE" inherits="GameFontNormal">
+					<Color r="1" g="1" b="1"/>
+					<Anchors>
+						<Anchor point="CENTER" relativeTo="$parent_Header" relativePoint="CENTER">
+							<Offset>
+								<AbsDimension x="0" y="11"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<Texture name="$parent_LevelIcon" file="Interface\WorldStateFrame\NeutralTower">
+					<Size>
+						<AbsDimension x="16" y="16"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOP" relativePoint="TOP">
+							<Offset>
+								<AbsDimension x="124" y="-60"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0.09375" right="0.59375" top="0.0625" bottom="0.5625"/>
+				</Texture>
+				<FontString name="$parent_Level" text="PD_LEVEL0" inherits="GameFontNormalLarge">
+					<Anchors>
+						<Anchor point="LEFT" relativeTo="$parent_LevelIcon" relativePoint="RIGHT">
+							<Offset>
+								<AbsDimension x="4" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<Texture name="$parent_LivesIcon" file="Interface\LFGFrame\LFGRole">
+					<Size>
+						<AbsDimension x="16" y="16"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parent_LevelIcon" relativePoint="BOTTOM">
+							<Offset>
+								<AbsDimension x="0" y="-5"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0.75" right="1" top="0" bottom="1"/>
+				</Texture>
+				<FontString name="$parent_Lives" text="PD_LIVES" inherits="GameFontNormalLarge">
+					<Anchors>
+						<Anchor point="LEFT" relativeTo="$parent_LivesIcon" relativePoint="RIGHT">
+							<Offset>
+								<AbsDimension x="4" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<Texture name="$parent_GoldIcon" file="Interface\MoneyFrame\UI-GoldIcon">
+					<Size>
+						<AbsDimension x="16" y="16"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parent_LivesIcon" relativePoint="BOTTOM">
+							<Offset>
+								<AbsDimension x="0" y="-5"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<FontString name="$parent_Gold" text="PD_GOLD" inherits="GameFontNormalLarge">
+					<Anchors>
+						<Anchor point="LEFT" relativeTo="$parent_GoldIcon" relativePoint="RIGHT">
+							<Offset>
+								<AbsDimension x="4" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<Texture name="$parent_EssenceIcon" file="Interface\WorldStateFrame\SkullBones">
+					<Size>
+						<AbsDimension x="16" y="16"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOP" relativeTo="$parent_GoldIcon" relativePoint="BOTTOM">
+							<Offset>
+								<AbsDimension x="0" y="-5"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+					<TexCoords left="0.046875" right="0.453125" top="0.046875" bottom="0.46875"/>
+				</Texture>
+				<FontString name="$parent_Essence" text="PD_ESSENCE0" inherits="GameFontNormalLarge">
+					<Anchors>
+						<Anchor point="LEFT" relativeTo="$parent_EssenceIcon" relativePoint="RIGHT">
+							<Offset>
+								<AbsDimension x="4" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString name="$parent_VersionText" text="Version 0.2.0" inherits="GameFontNormal">
+					<Color r="1" g="1" b="1"/>
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT">
+							<Offset>
+								<AbsDimension x="-24" y="50"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+	</Frame>
+	<GameTooltip name="PrimalDefense_Tooltip" inherits="GameTooltipTemplate" parent="PrimalDefense" hidden="true"/>
+</Ui>

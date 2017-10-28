@@ -1,0 +1,19 @@
+﻿## Interface: 30200
+## Title: Primal Defense
+## Version: 0.2.0
+## Author: Kjado (nandersoncs@gmail.com)
+## Notes: Help fortify the Amiran city against certain doom in this tower-defense game!
+## Notes-zhCN: 在这个TD游戏中加强Amiran城市的防御以抵抗末日的来临！
+## Notes-zhTW: 在這個TD遊戲中加強Amiran城市的防禦以抵抗末日的來臨！
+## SavedVariables: PrimalDefenseSVar
+localization.enUS.lua
+localization.zhCN.lua
+localization.zhTW.lua
+Globals.lua
+Animation.lua
+Debuffs.lua
+Enemies.lua
+Towers.lua
+TooltipData.lua
+PrimalDefense.lua
+PrimalDefense.xml
